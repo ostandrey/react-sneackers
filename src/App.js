@@ -1,31 +1,26 @@
+import Card from './components/Card';
+import Header from "./components/Header";
+import Menu from "./components/Menu";
+
 function App() {
   return (
     <div className="wrapper clear">
-      <header className="d-flex justify-between align-center p-40">
-        <div className="d-flex align-center" >
-          <img width={40} height={40} src="/assets/logo.svg" alt='logo'/>
-          <div>
-            <h3 className="text-uppercase">Sneakers Shop</h3>
-            <p>Shop of the Best sneakers</p>
+      <Menu/>
+      <Header/>
+      <div className="content p-40">
+        <div className="d-flex align-center justify-between">
+          <h1>All Sneakers</h1>
+          <div className="search">
+            <img src="/assets/search.svg" alt="search"/>
+            <input type="text" placeholder="Search..."/>
           </div>
         </div>
-        <ul className="d-flex">
-          <li className="mr-30">
-            <img width={18} height={18} src="/assets/basket.svg" alt='basket'/>
-            <span>120 $</span>
-          </li>
-          <li>
-            <img width={18} height={18} src="/assets/favourites.svg" alt='favourites'/>
-          </li>
-          <li>
-            <img width={18} height={18} src="/assets/profile.svg" alt='profile'/>
-          </li>
-        </ul>
-      </header>
-      <div className="content p-40">
-        <h1>All Sneakers</h1>
         <div className="sneakers-cards d-flex justify-between mt-40">
+          <Card/>
           <div className="card">
+            <div className="favourite">
+              <img src="/assets/btn-heart-regular.svg" alt="Add to favourite"/>
+            </div>
             <img height={112} src="/assets/sneakers/1.jpg" alt="sneaker-1"/>
             <h5>Men`s sneakers Nike Blazer Mid Suede</h5>
             <div className="d-flex justify-between align-center">
