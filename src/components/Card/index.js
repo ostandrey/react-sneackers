@@ -1,19 +1,20 @@
 import React from 'react';
+import classes from './Card.module.scss';
 
-const Card = () => {
+const Card = ({card}) => {
     return (
-        <div className="card">
-            <div className="favourite">
+        <div className={classes.card}>
+            <div className={classes.favourite}>
                 <img src="/assets/btn-heart-regular.svg" alt="Add to favourite"/>
             </div>
-            <img height={112} src="/assets/sneakers/1.jpg" alt="sneaker-1"/>
-            <h5>Men`s sneakers Nike Blazer Mid Suede</h5>
+            <img height={112} src={card.imageUrl} alt="sneaker-1"/>
+            <h5>{card.name}</h5>
             <div className="d-flex justify-between align-center">
                 <div className="d-flex flex-column">
                     <span>Cost: </span>
-                    <b>120$</b>
+                    <b>{card.price}</b>
                 </div>
-                <button className="button">
+                <button className="button" onClick={card.onClick}>
                     <img width={11} height={11} src="/assets/plus.svg" alt="add"/>
                 </button>
             </div>
