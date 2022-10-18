@@ -1,100 +1,119 @@
 import Card from './components/Card';
 import Header from "./components/Header";
 import Menu from "./components/Menu";
+import React, {useEffect, useState} from "react";
 
-const arr = [
-  {
-    name: 'Men`s sneakers Nike Blazer Mid Suede',
-    price: 120,
-    imageUrl: '/assets/sneakers/1.jpg'
-  },
-  {
-    name: 'Men`s sneakers Nike Air Max',
-    price: 150,
-    imageUrl: '/assets/sneakers/2.jpg'
-  },
-  {
-    name: 'Men`s sneakers Nike Blazer Mid Suede',
-    price: 90,
-    imageUrl: '/assets/sneakers/3.jpg'
-  },
-]
+
+// const arr = [
+//   {
+//     "name": "Men`s sneakers Nike Blazer Mid Suede",
+//     "price": 120,
+//     "imageUrl": "/assets/sneakers/1.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Nike Air Max 270",
+//     "price": 150,
+//     "imageUrl": "/assets/sneakers/2.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Nike Blazer Mid Suede",
+//     "price": 90,
+//     "imageUrl": "/assets/sneakers/3.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Puma X Aka Boku Future Rider",
+//     "price": 100,
+//     "imageUrl": "/assets/sneakers/4.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Under Armour Curry 8",
+//     "price": 110,
+//     "imageUrl": "/assets/sneakers/5.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Nike Kyrie 7",
+//     "price": 130,
+//     "imageUrl": "/assets/sneakers/6.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Jordan Air Jordan 11",
+//     "price": 180,
+//     "imageUrl": "/assets/sneakers/7.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Nike LeBron XVIII",
+//     "price": 160,
+//     "imageUrl": "/assets/sneakers/8.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Nike Lebron XVIII Low",
+//     "price": 150,
+//     "imageUrl": "/assets/sneakers/9.jpg"
+//   },
+//   {
+//     "name": "Men`s sneakers Nike Kyrie Flytrap IV",
+//     "price": 210,
+//     "imageUrl": "/assets/sneakers/10.jpg"
+//   },
+// ]
 
 function App() {
+  const [items, setItems] = useState([])
+  const [cartItems, setCartItems] = useState([])
+  const [searchValue, setSearchValue] = useState('')
+  const [isOpenedCart, setIsOpenedCart] = useState(false);
+
+  useEffect(() => {
+      fetch("https://63493656a59874146b1a27fc.mockapi.io/items")
+          .then((res) => {
+              return res.json();
+          })
+          .then(json => {
+              setItems(json)
+          })
+  }, [])
+
+    const onAddToCart = (obj) => {
+        console.log(obj)
+        setCartItems(prev => {
+            // return prev.find(item => item.name !== obj.name ? [...prev, obj] : prev)
+            return [...prev, obj]
+        })
+    }
+    console.log(items)
+    const onChangeSearch = (event) => {
+      setSearchValue(event.target.value)
+    }
+
   return (
     <div className="wrapper clear">
-      <Menu/>
-      <Header/>
+      { isOpenedCart && <Menu onClose={() => setIsOpenedCart(false)} items={cartItems}/> }
+      <Header onClickCart={() => setIsOpenedCart(true)}/>
       <div className="content p-40">
         <div className="d-flex align-center justify-between">
-          <h1>All Sneakers</h1>
+          <h1>{searchValue ? `Search: "${searchValue}"` : "All Sneakers" }</h1>
           <div className="search">
-            <img src="/assets/search.svg" alt="search"/>
-            <input type="text" placeholder="Search..."/>
+              <img src="/assets/search.svg" alt="search"/>
+              {
+                  searchValue && <img className="btn-remove cu-p clear" src="/assets/btn-remove.svg" alt="Clear" onClick={() => setSearchValue('')}/>
+              }
+            <input type="text" placeholder="Search..." onChange={onChangeSearch} value={searchValue}/>
           </div>
         </div>
-        <div className="sneakers-cards d-flex justify-between mt-40">
-          {
-            arr.map( card =>
-              <Card card={card} onClick={() => console.log(card)}/>
+        <div className="sneakers-cards d-flex justify-between mt-40 flex-wrap">
+          {items
+                .filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+                .map((item) =>
+                    <Card
+                        key={item.name}
+                        name={item.name}
+                        price={item.price}
+                        imageUrl={item.imageUrl}
+                        onClickFavourite={() => console.log(item)}
+                        onAdd={(obj) => onAddToCart(obj)}
+                    />
             )
           }
-
-          {/*<div className="card">*/}
-          {/*  <div className="favourite">*/}
-          {/*    <img src="/assets/btn-heart-regular.svg" alt="Add to favourite"/>*/}
-          {/*  </div>*/}
-          {/*  <img height={112} src="/assets/sneakers/1.jpg" alt="sneaker-1"/>*/}
-          {/*  <h5>Men`s sneakers Nike Blazer Mid Suede</h5>*/}
-          {/*  <div className="d-flex justify-between align-center">*/}
-          {/*    <div className="d-flex flex-column">*/}
-          {/*      <span>Cost: </span>*/}
-          {/*      <b>120$</b>*/}
-          {/*    </div>*/}
-          {/*    <button className="button">*/}
-          {/*      <img width={11} height={11} src="/assets/plus.svg" alt="add"/>*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {/*<div className="card">*/}
-          {/*  <img width={133} height={112} src="/assets/sneakers/2.jpg" alt="sneaker-1"/>*/}
-          {/*  <h5>Men`s sneakers Nike Blazer Mid Suede</h5>*/}
-          {/*  <div className="d-flex justify-between align-center">*/}
-          {/*    <div className="d-flex flex-column">*/}
-          {/*      <span>Cost: </span>*/}
-          {/*      <b>120$</b>*/}
-          {/*    </div>*/}
-          {/*    <button className="button">*/}
-          {/*      <img width={11} height={11} src="/assets/plus.svg" alt="add"/>*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {/*<div className="card">*/}
-          {/*  <img width={133} height={112} src="/assets/sneakers/3.jpg" alt="sneaker-1"/>*/}
-          {/*  <h5>Men`s sneakers Nike Blazer Mid Suede</h5>*/}
-          {/*  <div className="d-flex justify-between align-center">*/}
-          {/*    <div className="d-flex flex-column">*/}
-          {/*      <span>Cost: </span>*/}
-          {/*      <b>120$</b>*/}
-          {/*    </div>*/}
-          {/*    <button className="button">*/}
-          {/*      <img width={11} height={11} src="/assets/plus.svg" alt="add"/>*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {/*<div className="card">*/}
-          {/*  <img width={133} height={112} src="/assets/sneakers/4.jpg" alt="sneaker-1"/>*/}
-          {/*  <h5>Men`s sneakers Nike Blazer Mid Suede</h5>*/}
-          {/*  <div className="d-flex justify-between align-center">*/}
-          {/*    <div className="d-flex flex-column">*/}
-          {/*      <span>Cost: </span>*/}
-          {/*      <b>120$</b>*/}
-          {/*    </div>*/}
-          {/*    <button className="button">*/}
-          {/*      <img width={11} height={11} src="/assets/plus.svg" alt="add"/>*/}
-          {/*    </button>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
         </div>
       </div>
     </div>
