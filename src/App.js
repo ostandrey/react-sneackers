@@ -1,4 +1,5 @@
 import Card from './components/Card';
+import axios from "axios";
 import Header from "./components/Header";
 import Menu from "./components/Menu";
 import React, {useEffect, useState} from "react";
@@ -64,20 +65,24 @@ function App() {
   const [isOpenedCart, setIsOpenedCart] = useState(false);
 
   useEffect(() => {
-      fetch("https://63493656a59874146b1a27fc.mockapi.io/items")
-          .then((res) => {
-              return res.json();
-          })
-          .then(json => {
-              setItems(json)
-          })
+      // fetch("https://63493656a59874146b1a27fc.mockapi.io/items")
+      //     .then((res) => {
+      //         return res.json();
+      //     })
+      //     .then(json => {
+      //         setItems(json)
+      //     })
+
+      axios.get('https://63493656a59874146b1a27fc.mockapi.io/items')
+          .then(res => setItems(res.data))
   }, [])
 
-    const onAddToCart = (obj) => {
-        console.log(obj)
+    const onAddToCart = (obj, prev) => {
+        // console.log(prev)
+        axios.post('https://63493656a59874146b1a27fc.mockapi.io/cart');
         setCartItems(prev => {
-            // return prev.find(item => item.name !== obj.name ? [...prev, obj] : prev)
-            return [...prev, obj]
+            return prev.includes(item => item.name === obj.name) ? prev : [...prev, obj]
+            // return [...prev, obj]
         })
     }
     console.log(items)
@@ -105,7 +110,7 @@ function App() {
                 .filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
                 .map((item) =>
                     <Card
-                        key={item.name}
+                        key={item.imageUrl}
                         name={item.name}
                         price={item.price}
                         imageUrl={item.imageUrl}
