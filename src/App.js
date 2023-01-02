@@ -78,14 +78,17 @@ function App() {
   }, [])
 
     const onAddToCart = (obj, prev) => {
-        // console.log(prev)
         axios.post('https://63493656a59874146b1a27fc.mockapi.io/cart');
         setCartItems(prev => {
             return prev.includes(item => item.name === obj.name) ? prev : [...prev, obj]
             // return [...prev, obj]
         })
     }
-    console.log(items)
+
+    const onRemoveItem = (id) => {
+        setCartItems((prev) => prev.filter(item => item.id === id))
+    }
+
     const onChangeSearch = (event) => {
       setSearchValue(event.target.value)
     }
