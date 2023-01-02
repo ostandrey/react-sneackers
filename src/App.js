@@ -75,24 +75,31 @@ function App() {
 
       axios.get('https://63493656a59874146b1a27fc.mockapi.io/items')
           .then(res => setItems(res.data))
+      axios.get('https://63493656a59874146b1a27fc.mockapi.io/cart')
+          .then(res => setCartItems(res.data))
   }, [])
 
     const onAddToCart = (obj, prev) => {
         // console.log(prev)
-        axios.post('https://63493656a59874146b1a27fc.mockapi.io/cart');
+        axios.post('https://63493656a59874146b1a27fc.mockapi.io/cart', obj);
         setCartItems(prev => {
             return prev.includes(item => item.name === obj.name) ? prev : [...prev, obj]
             // return [...prev, obj]
         })
     }
-    console.log(items)
+
+    const onRemoveItem = (id) => {
+        axios.delete(`https://63493656a59874146b1a27fc.mockapi.io/cart/${id}`, id)
+            .then(res => setCartItems(res.data))
+    }
+
     const onChangeSearch = (event) => {
       setSearchValue(event.target.value)
     }
 
   return (
     <div className="wrapper clear">
-      { isOpenedCart && <Menu onClose={() => setIsOpenedCart(false)} items={cartItems}/> }
+      { isOpenedCart && <Menu items={cartItems} onClose={() => setIsOpenedCart(false)} onRemove={onRemoveItem}/> }
       <Header onClickCart={() => setIsOpenedCart(true)}/>
       <div className="content p-40">
         <div className="d-flex align-center justify-between">

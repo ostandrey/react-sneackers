@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Menu = ({onClose, items = [], ...props}) => {
+const Menu = ({onClose, items = [], onRemove, ...props}) => {
     console.log(items)
     return (
         <div className="overlay">
@@ -26,7 +26,11 @@ const Menu = ({onClose, items = [], ...props}) => {
                                     <p className="mb-5">{obj.name}</p>
                                     <b>{obj.price} $</b>
                                 </div>
-                                <img className="btn-remove" src="/assets/btn-remove.svg" alt="Remove"/>
+                                <img
+                                    className="btn-remove"
+                                    src="/assets/btn-remove.svg"
+                                    alt="Remove"
+                                    onClick={() => onRemove(obj.id)}/>
                             </div>
                         ))
                     }
