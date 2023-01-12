@@ -192,3 +192,28 @@ header {
     }
   }
 }
+
+.cart-empty {
+  text-align: center;
+
+  p {
+    width: 280px;
+    line-height: 24px;
+  }
+
+  button {
+
+    img {
+      margin-right: 15px;
+      transform: rotate(180deg);
+      transition: transform 0.15s ease-in-out;
+    }
+
+    &:hover {
+      img {
+        transform: rotate(180deg) translateX(3px);
+      }
+    }
+  }
+
+}

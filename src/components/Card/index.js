@@ -2,18 +2,24 @@ import React, {useState} from 'react';
 import classes from './Card.module.scss';
 
 
-const Card = ({onAdd, onClickFavourite, name, price, imageUrl}) => {
+const Card = ({ onAdd, onFavourite, id, name, price, imageUrl, favourited}) => {
     const [isAdded, setIsAdded] = useState(false);
+    const [isFavourite, setIsFavourite] = useState(favourited);
 
     const onClickAdd = () => {
         onAdd({name, price, imageUrl});
         setIsAdded(!isAdded)
     }
 
+    const onClickFavourite = () => {
+        onFavourite({id, name, price, imageUrl})
+        setIsFavourite(!isFavourite)
+    }
+
     return (
         <div className={classes.card}>
             <div className={classes.favourite} onClick={onClickFavourite}>
-                <img src="/assets/btn-heart-regular.svg" alt="Add to favourite"/>
+                <img src={isFavourite ? "/assets/btn-heart-active.svg" : "/assets/btn-heart-regular.svg"} alt="Add to favourite"/>
             </div>
             <img height={112} src={imageUrl} alt="sneaker-1"/>
             <h5>{name}</h5>
