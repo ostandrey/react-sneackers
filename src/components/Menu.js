@@ -20,7 +20,7 @@ const Menu = ({onClose, items = [], onRemove, ...props}) => {
                             <div className="items">
                                 {
                                     items.map(obj => (
-                                        <div className="cart-item d-flex align-center justify-between mb-20" key={obj.imageUrl}>
+                                        <div className="cart-item d-flex align-center justify-between mb-20" key={obj.id}>
                                             <div className="mr-20">
                                                 <img width={70} height={70} src={obj.imageUrl} alt="Sneakers"/>
                                             </div>

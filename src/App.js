@@ -67,6 +67,7 @@ function App() {
   const [favourites, setFavourites] = useState([])
   const [searchValue, setSearchValue] = useState('')
   const [isOpenedCart, setIsOpenedCart] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
       // fetch("https://63493656a59874146b1a27fc.mockapi.io/items")
@@ -77,17 +78,39 @@ function App() {
       //         setItems(json)
       //     })
 
-      axios.get('https://63493656a59874146b1a27fc.mockapi.io/items')
-          .then(res => setItems(res.data))
-      axios.get('https://63493656a59874146b1a27fc.mockapi.io/cart')
-          .then(res => setCartItems(res.data))
-      axios.get('https://63493656a59874146b1a27fc.mockapi.io/favourites')
-          .then(res => setFavourites(res.data))
+      setIsLoading(true)
+      async function fetchData () {
+          const itemsResponse = await axios.get('https://63493656a59874146b1a27fc.mockapi.io/items')
+              // .then(res => setItems(res.data))
+          const cartResponse = await axios.get('https://63493656a59874146b1a27fc.mockapi.io/cart')
+              // .then(res => setCartItems(res.data))
+          const favouritesResponse = await axios.get('https://63493656a59874146b1a27fc.mockapi.io/favourites')
+              // .then(res => setFavourites(res.data))
+
+          setIsLoading(false);
+
+          setItems(itemsResponse.data);
+          setCartItems(cartResponse.data);
+          setFavourites(favouritesResponse.data);
+      }
+
+      fetchData();
+
   }, [])
 
     const onAddToCart = (obj) => {
-        axios.post('https://63493656a59874146b1a27fc.mockapi.io/cart', obj);
-        setCartItems((prev) => [...prev, obj])
+        console.log(obj)
+      try {
+          if (cartItems.find(item => item.id === obj.id)) {
+              axios.delete(`https://63493656a59874146b1a27fc.mockapi.io/cart/${obj.id}`, obj.id)
+              setCartItems((prev) => prev.filter(item => item.id !== obj.id))
+          } else {
+              axios.post('https://63493656a59874146b1a27fc.mockapi.io/cart', obj);
+              setCartItems((prev) => [...prev, obj])
+          }
+      } catch (e) {
+          alert('Sorry, something went wrong(')
+      }
     }
 
     const onRemoveItem = (id) => {
@@ -97,16 +120,18 @@ function App() {
     }
 
     const onAddToFavourite = async (obj) => {
-        console.log(obj)
-      if (favourites.find(favObj => favObj.id === obj.id)) {
-          console.log('delete')
-          axios.delete(`https://63493656a59874146b1a27fc.mockapi.io/favourites/${obj.id}`, obj.id)
-          // setFavourites((prev) => prev.filter((item) => item.id !== obj.id))
-      } else {
-          console.log('create')
-          const {data} = await axios.post('https://63493656a59874146b1a27fc.mockapi.io/favourites', obj);
-          setFavourites((prev) => [...prev, data])
+      try {
+          if (favourites.find(favObj => favObj.id === obj.id)) {
+              axios.delete(`https://63493656a59874146b1a27fc.mockapi.io/favourites/${obj.id}`, obj.id)
+              // setFavourites((prev) => prev.filter((item) => item.id !== obj.id))
+          } else {
+              const {data} = await axios.post('https://63493656a59874146b1a27fc.mockapi.io/favourites', obj);
+              setFavourites((prev) => [...prev, data])
+          }
+      } catch (err) {
+          alert('Sorry, something went wrong(')
       }
+
     }
 
     const onChangeSearch = (event) => {
@@ -121,12 +146,14 @@ function App() {
             <Route path="/" element={
                 <Home
                     items={items}
+                    cartItems={cartItems}
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     setFavourites={setFavourites}
                     onAddToCart={onAddToCart}
                     onChangeSearch={onChangeSearch}
                     onAddToFavourite={onAddToFavourite}
+                    isLoading={isLoading}
                 />
             } />
             <Route path="/favourites" exact element={
