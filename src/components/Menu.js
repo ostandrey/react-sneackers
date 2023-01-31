@@ -16,7 +16,7 @@ const Menu = ({onClose, items = [], onRemove, ...props}) => {
                 </h2>
                 {
                     items.length > 0 ?
-                        <>
+                        <div className="d-flex flex-column flex">
                             <div className="items">
                                 {
                                     items.map(obj => (
@@ -66,7 +66,7 @@ const Menu = ({onClose, items = [], onRemove, ...props}) => {
                                     <img src="/assets/arrow.svg" alt="arrow"/>
                                 </button>
                             </div>
-                        </>
+                        </div>
                         :
                         <div className="cart-empty d-flex align-center justify-center flex-column flex">
                             <img src="/assets/box.svg" alt="empty box" className="mb-20" width="120px" height="120px"/>

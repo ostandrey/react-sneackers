@@ -1,11 +1,13 @@
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {Route, Routes} from "react-router-dom";
 import Header from "./components/Header";
 import Menu from "./components/Menu";
 
 import Home from "./pages/Home";
 import Favourites from "./pages/Favourites";
+
+import {AppContext} from "./context";
 
 
 // const arr = [
@@ -61,6 +63,7 @@ import Favourites from "./pages/Favourites";
 //   },
 // ]
 
+
 function App() {
   const [items, setItems] = useState([])
   const [cartItems, setCartItems] = useState([])
@@ -99,7 +102,6 @@ function App() {
   }, [])
 
     const onAddToCart = (obj) => {
-        console.log(obj)
       try {
           if (cartItems.find(item => item.id === obj.id)) {
               axios.delete(`https://63493656a59874146b1a27fc.mockapi.io/cart/${obj.id}`, obj.id)
@@ -123,7 +125,7 @@ function App() {
       try {
           if (favourites.find(favObj => favObj.id === obj.id)) {
               axios.delete(`https://63493656a59874146b1a27fc.mockapi.io/favourites/${obj.id}`, obj.id)
-              // setFavourites((prev) => prev.filter((item) => item.id !== obj.id))
+              setFavourites((prev) => prev.filter((favObj) => favObj.id !== obj.id))
           } else {
               const {data} = await axios.post('https://63493656a59874146b1a27fc.mockapi.io/favourites', obj);
               setFavourites((prev) => [...prev, data])
@@ -138,38 +140,37 @@ function App() {
       setSearchValue(event.target.value)
     }
 
-  return (
-    <div className="wrapper clear">
-      { isOpenedCart && <Menu items={cartItems} onClose={() => setIsOpenedCart(false)} onRemove={onRemoveItem}/> }
-      <Header onClickCart={() => setIsOpenedCart(true)}/>
-        <Routes>
-            <Route path="/" element={
-                <Home
-                    items={items}
-                    cartItems={cartItems}
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    setFavourites={setFavourites}
-                    onAddToCart={onAddToCart}
-                    onChangeSearch={onChangeSearch}
-                    onAddToFavourite={onAddToFavourite}
-                    isLoading={isLoading}
-                />
-            } />
-            <Route path="/favourites" exact element={
-                <Favourites
-                    items={favourites}
-                    // searchValue={searchValue}
-                    // setSearchValue={setSearchValue}
-                    // setFavourites={setFavourites}
-                    // onAddToCart={onAddToCart}
-                    // onChangeSearch={onChangeSearch}
-                    onAddToFavourite={onAddToFavourite}
-                />
-            } />
-        </Routes>
+    const isAddedItems = (id) => {
+      return cartItems.some(obj => Number(obj.id) === Number(id))
+    }
 
-    </div>
+  return (
+      <AppContext.Provider value={{items, cartItems, favourites, isAddedItems, onAddToFavourite}}>
+          <div className="wrapper clear">
+              { isOpenedCart && <Menu items={cartItems} onClose={() => setIsOpenedCart(false)} onRemove={onRemoveItem}/> }
+
+              <Header onClickCart={() => setIsOpenedCart(true)}/>
+
+              <Routes>
+                  <Route path="/" element={
+                      <Home
+                          items={items}
+                          cartItems={cartItems}
+                          searchValue={searchValue}
+                          setSearchValue={setSearchValue}
+                          setFavourites={setFavourites}
+                          onAddToCart={onAddToCart}
+                          onChangeSearch={onChangeSearch}
+                          onAddToFavourite={onAddToFavourite}
+                          isLoading={isLoading}
+                      />
+                  } />
+                  <Route path="/favourites" exact element={
+                      <Favourites/>
+                  } />
+              </Routes>
+          </div>
+      </AppContext.Provider>
   );
 }
 
