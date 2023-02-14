@@ -1,6 +1,31 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
+import Info from "./Info";
+import {AppContext} from "../context";
+import axios from "axios";
 
 const Menu = ({onClose, items = [], onRemove, ...props}) => {
+    const {cartItems, setCartItems} = useContext(AppContext)
+
+    const [isOrderCompleted, setIsOrderCompleted] = useState(false);
+    const [orderId, setOrderId] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const onClickOrder = async () => {
+        try {
+            setIsLoading(true)
+            //Create orders path
+            const {data} = await axios.post("https://63e4e77ac04baebbcdaebb78.mockapi.io/orders", {
+                items: cartItems
+            })
+            await axios.put('/cart', [])
+            setOrderId(data.id)
+            setIsOrderCompleted(true)
+            setCartItems([])
+        } catch (e) {
+            alert('Sorry')
+        }
+        setIsLoading(false)
+    }
 
     return (
         <div className="overlay">
@@ -61,22 +86,18 @@ const Menu = ({onClose, items = [], onRemove, ...props}) => {
                                         <b>5 $</b>
                                     </li>
                                 </ul>
-                                <button className="green-btn">
+                                <button disabled={isLoading} className="green-btn" onClick={onClickOrder}>
                                     Checkout
                                     <img src="/assets/arrow.svg" alt="arrow"/>
                                 </button>
                             </div>
                         </div>
                         :
-                        <div className="cart-empty d-flex align-center justify-center flex-column flex">
-                            <img src="/assets/box.svg" alt="empty box" className="mb-20" width="120px" height="120px"/>
-                            <h2>Cart is empty</h2>
-                            <p className="opacity-6">Add at least sneakers to order</p>
-                            <button className="green-btn" onClick={onClose}>
-                                <img src="/assets/arrow.svg" alt="arrow"/>
-                                Go back
-                            </button>
-                        </div>
+                        <Info
+                            title={isOrderCompleted ? "Success order" : "Cart is empty"}
+                            description={isOrderCompleted ? `Thanks for ordering #${orderId}`  : "Add at least sneakers to order"}
+                            image={isOrderCompleted ?"/assets/complete-order.jpg" : "/assets/box.svg"}
+                        />
                 }
 
             </div>

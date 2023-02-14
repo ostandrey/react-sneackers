@@ -80,10 +80,11 @@ function App() {
       //     .then(json => {
       //         setItems(json)
       //     })
+      //https://sneakers.free.mockoapp.net
 
       setIsLoading(true)
       async function fetchData () {
-          const itemsResponse = await axios.get('https://63493656a59874146b1a27fc.mockapi.io/items')
+          const itemsResponse = await axios.get('https://cb26543b-f3cb-4ed5-a486-2e615d8ceba7.mock.pstmn.io/items')
               // .then(res => setItems(res.data))
           const cartResponse = await axios.get('https://63493656a59874146b1a27fc.mockapi.io/cart')
               // .then(res => setCartItems(res.data))
@@ -145,7 +146,7 @@ function App() {
     }
 
   return (
-      <AppContext.Provider value={{items, cartItems, favourites, isAddedItems, onAddToFavourite}}>
+      <AppContext.Provider value={{items, cartItems, favourites, isAddedItems, onAddToFavourite, setIsOpenedCart, setCartItems}}>
           <div className="wrapper clear">
               { isOpenedCart && <Menu items={cartItems} onClose={() => setIsOpenedCart(false)} onRemove={onRemoveItem}/> }
 
