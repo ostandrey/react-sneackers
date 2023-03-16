@@ -3,6 +3,8 @@ import Info from "./Info";
 import {AppContext} from "../context";
 import axios from "axios";
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 const Menu = ({onClose, items = [], onRemove, ...props}) => {
     const {cartItems, setCartItems} = useContext(AppContext)
 
@@ -17,12 +19,17 @@ const Menu = ({onClose, items = [], onRemove, ...props}) => {
             const {data} = await axios.post("https://63e4e77ac04baebbcdaebb78.mockapi.io/orders", {
                 items: cartItems
             })
-            await axios.put('/cart', [])
             setOrderId(data.id)
             setIsOrderCompleted(true)
             setCartItems([])
+
+            for( let i = 0; i < cartItems.length; i++) {
+                const item = cartItems[i];
+                await axios.delete('https://63493656a59874146b1a27fc.mockapi.io/cart/' + item.id);
+                await delay(1000);
+            }
         } catch (e) {
-            alert('Sorry')
+            alert('Failed to create an order')
         }
         setIsLoading(false)
     }
