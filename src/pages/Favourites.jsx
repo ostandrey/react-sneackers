@@ -9,11 +9,11 @@ const Favourites = () => {
             <div className="d-flex align-center justify-between">
                 <h1>Favourites</h1>
             </div>
-            <div className="sneakers-cards d-flex justify-between mt-40 flex-wrap">
+            <div className="sneakers-cards d-flex mt-40 flex-wrap">
                 {favourites
-                    .map((item) =>
+                    .map((item, index) =>
                         <Card
-                            key={item.imageUrl}
+                            key={index}
                             favourited={true}
                             onFavourite={onAddToFavourite}
                             {...item}

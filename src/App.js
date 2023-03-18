@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Favourites from "./pages/Favourites";
 
 import {AppContext} from "./context";
+import Orders from "./pages/Orders";
 
 
 // const arr = [
@@ -91,11 +92,12 @@ function App() {
           const favouritesResponse = await axios.get('https://63493656a59874146b1a27fc.mockapi.io/favourites')
               // .then(res => setFavourites(res.data))
 
-          setIsLoading(false);
-
           setItems(itemsResponse.data);
           setCartItems(cartResponse.data);
           setFavourites(favouritesResponse.data);
+
+          setIsLoading(false);
+
       }
 
       fetchData();
@@ -164,10 +166,15 @@ function App() {
                           onChangeSearch={onChangeSearch}
                           onAddToFavourite={onAddToFavourite}
                           isLoading={isLoading}
-                      />
-                  } />
+                      />}
+                  />
+
                   <Route path="/favourites" exact element={
                       <Favourites/>
+                  } />
+
+                  <Route path="/orders" exact element={
+                      <Orders/>
                   } />
               </Routes>
           </div>

@@ -38,7 +38,7 @@ const Home = ({
                     <input type="text" placeholder="Search..." onChange={onChangeSearch} value={searchValue}/>
                 </div>
             </div>
-            <div className="sneakers-cards d-flex justify-between mt-40 flex-wrap">
+            <div className="sneakers-cards d-flex mt-40 flex-wrap">
                 {
                     renderItems()
                 }

@@ -48,9 +48,12 @@ const Card = ({
                     </ContentLoader>
                     :
                     <>
-                        <div className={classes.favourite} onClick={onClickFavourite}>
-                            <img src={isFavourite ? "/assets/btn-heart-active.svg" : "/assets/btn-heart-regular.svg"} alt="Add to favourite"/>
-                        </div>
+                        {
+                            onFavourite &&
+                            <div className={classes.favourite} onClick={onClickFavourite}>
+                                <img src={isFavourite ? "/assets/btn-heart-active.svg" : "/assets/btn-heart-regular.svg"} alt="Add to favourite"/>
+                            </div>
+                        }
                         <img width='100%' height={135} src={imageUrl} alt="sneakers"/>
                         <h5>{name}</h5>
                         <div className="d-flex justify-between align-center">
@@ -58,7 +61,15 @@ const Card = ({
                                 <span>Cost: </span>
                                 <b>{price}</b>
                             </div>
-                            <img onClick={onClickAdd} className={classes.plus} src={isAddedItems(id) ? "/assets/btn-checked.svg" : "/assets/btn-add.svg"} alt="add"/>
+                            {
+                                onAdd &&
+                                <img
+                                    onClick={onClickAdd}
+                                    className={classes.plus}
+                                    src={isAddedItems(id) ? "/assets/btn-checked.svg" : "/assets/btn-add.svg"}
+                                    alt="add"
+                                />
+                            }
                         </div>
                     </>
             }
