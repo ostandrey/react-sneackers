@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
-import Info from "./Info";
 import axios from "axios";
-import {useCart} from "../hooks/useCart";
+
+import Info from "../Info";
+import {useCart} from "../../hooks/useCart";
+
+import classes from './Menu.module.scss';
+
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
-const Menu = ({onClose, items = [], onRemove, ...props}) => {
+const Menu = ({onClose, items = [], onRemove, opened}) => {
     const {cartItems, setCartItems, totalPrice} = useCart()
 
     const [isOrderCompleted, setIsOrderCompleted] = useState(false);
@@ -35,8 +39,8 @@ const Menu = ({onClose, items = [], onRemove, ...props}) => {
     }
 
     return (
-        <div className="overlay">
-            <div className="menu">
+        <div className={`${classes.overlay} ${opened ? classes.menuVisible : ''}`}>
+            <div className={classes.menu}>
                 <h2 className="mb-30 d-flex justify-between ">
                     Cart
                     <img

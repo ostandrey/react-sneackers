@@ -2,7 +2,7 @@ import axios from "axios";
 import React, {createContext, useEffect, useState} from "react";
 import {Route, Routes} from "react-router-dom";
 import Header from "./components/Header";
-import Menu from "./components/Menu";
+import Index from "./components/Menu";
 
 import Home from "./pages/Home";
 import Favourites from "./pages/Favourites";
@@ -150,7 +150,8 @@ function App() {
   return (
       <AppContext.Provider value={{items, cartItems, favourites, isAddedItems, onAddToFavourite, setIsOpenedCart, setCartItems}}>
           <div className="wrapper clear">
-              { isOpenedCart && <Menu items={cartItems} onClose={() => setIsOpenedCart(false)} onRemove={onRemoveItem}/> }
+
+              <Index items={cartItems} onClose={() => setIsOpenedCart(false)} onRemove={onRemoveItem} opened={isOpenedCart}/>
 
               <Header onClickCart={() => setIsOpenedCart(true)}/>
 
