@@ -53,7 +53,7 @@ const Menu = ({onClose, items = [], onRemove, opened}) => {
                 {
                     items.length > 0 ?
                         <div className="d-flex flex-column flex">
-                            <div className="items">
+                            <div className="items flex">
                                 {
                                     items.map(obj => (
                                         <div className="cart-item d-flex align-center justify-between mb-20" key={obj.id}>
